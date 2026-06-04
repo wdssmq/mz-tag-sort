@@ -66,7 +66,6 @@ const App: Component = () => {
           class="tags-list"
           itemClass="tag-item"
           items={items()}
-          getId={item => item}
           onChange={commitItems}
           renderItem={(item, index) => (
             <>

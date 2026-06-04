@@ -5,7 +5,6 @@ import Sortable from 'sortablejs'
 
 interface SortableListProps<T> {
   items: readonly T[]
-  getId: (item: T) => string
   renderItem: (item: T, index: number) => JSX.Element
   onChange?: (next: T[]) => void
   class?: string
@@ -21,24 +20,32 @@ export default function SortableList<T>(props: SortableListProps<T>) {
   onMount(() => {
     const sortable = Sortable.create(el, {
       animation: props.animation ?? 150,
-      dataIdAttr: 'data-id',
       draggable: '[data-sortable-item]',
       handle: props.handle,
       ...props.options,
       onEnd(evt: SortableEvent) {
-        if (evt.oldIndex == null || evt.newIndex == null)
+        // 根据拖拽结果更新数据源（重新排列数组）
+        const oldIndex = evt.oldIndex
+        const newIndex = evt.newIndex
+        if (oldIndex === newIndex || oldIndex == null || newIndex == null)
           return
-
-        const orderedIds = sortable.toArray()
-        const itemById = new Map(props.items.map(item => [props.getId(item), item]))
-        const next = orderedIds
-          .map(id => itemById.get(id))
-          .filter((item): item is T => item !== undefined)
-
-        props.onChange?.(next)
+        // 获取当前 DOM 中的子元素顺序，映射回数据项
+        const children = [
+          ...el.children,
+        ] as HTMLSpanElement[]
+        // 根据 data-index 属性获取新的数据项顺序
+        const newItems = children.map(v =>
+          props.items[Number.parseInt(v.dataset.index!)],
+        ) as T[]
+        // 恢复旧的 DOM 顺序，保证上层数据重新渲染后得到预期的结果
+        children.sort(
+          (a, b) => Number.parseInt(a.dataset.index!) - Number.parseInt(b.dataset.index!),
+        )
+        el?.replaceChildren(...children)
+        // 通知上层组件数据已更新
+        props.onChange?.(newItems)
       },
     })
-
     onCleanup(() => sortable.destroy())
   })
 
@@ -46,7 +53,7 @@ export default function SortableList<T>(props: SortableListProps<T>) {
     <div ref={el} class={props.class}>
       <For each={props.items}>
         {(item, index) => (
-          <div class={props.itemClass ?? 'drag-item'} data-sortable-item data-id={props.getId(item)}>
+          <div class={props.itemClass ?? 'drag-item'} data-sortable-item data-index={index()}>
             {props.renderItem(item, index())}
           </div>
         )}

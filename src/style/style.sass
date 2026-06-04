@@ -1,0 +1,91 @@
+#tags-sortable-container, #tags-sortable-container *
+    box-sizing: border-box
+
+#tags-sortable-container
+    $mz-font-size: 14px
+    font-size: $mz-font-size
+    $mz-li-base: $mz-font-size
+    $mz-li-padding: $mz-li-base * 0.8
+    $mz-li-height: $mz-li-base + 2 * $mz-li-padding
+    $mz-border-color: #ddd
+    $mz-border-darker: #bbb
+
+    margin: 12px
+    max-width: 600px
+
+    textarea
+        width: 100%
+        height: 60px
+        box-sizing: border-box
+        padding: 6px
+        outline: none
+
+    input[type="text"]
+        padding: 6px
+        outline: none
+        border: 1px solid $mz-border-darker
+        border-radius: 4px
+
+    .tags-list
+        list-style: none
+        padding: 0
+        margin: 8px 0
+        border: 1px solid $mz-border-color
+        min-height: 40px
+
+    .tag-item
+        height: $mz-li-height
+        border-bottom: 1px solid $mz-border-color
+        display: flex
+        align-items: center
+        justify-content: space-between
+        gap: 8px
+        background: #fff
+        cursor: grab
+        span
+            padding: $mz-li-padding 10px
+            flex: 1
+
+    .tag-item .text,
+    .tag-item .edit-input
+        flex: 1
+
+    .tag-item .actions
+        display: flex
+        align-items: center
+        justify-content: flex-end
+
+    .tag-item .delete-btn
+        border: 1px solid $mz-border-darker
+        background: #fff
+        color: #666
+        padding: 2px 8px
+        border-radius: 4px
+        cursor: pointer
+
+    .tag-item .delete-btn:hover
+        color: #c00
+        border-color: #c88
+
+    .tag-item.sortable-ghost
+        opacity: 0.5
+
+    .tag-item .handle
+        width: 16px
+        height: 16px
+        background: #ccc
+        display: inline-block
+        border-radius: 2px
+        cursor: grab
+        font-size: 10px
+        line-height: 16px
+        text-align: center
+        color: #666
+
+    .tag-item:last-child
+        border-bottom: none
+
+    .placeholder
+        height: $mz-li-height * 0.8
+        border: 2px dashed #bbb
+        margin: 4px 0

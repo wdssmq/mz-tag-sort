@@ -25,8 +25,15 @@ const App: Component = () => {
 
   // 处理文本输入事件
   const handleTextareaInput: JSX.EventHandler<HTMLTextAreaElement, InputEvent> = (event) => {
-    const nextText = core.normalizeInputText(event.currentTarget.value)
-    commitItems(core.parseItems(nextText))
+    const rawText = event.currentTarget.value
+    const normalizedText = core.normalizeInputText(rawText)
+
+    event.currentTarget.value = normalizedText // 直接修改输入框的值，保持用户输入态
+    // setText(normalizedText) // 这里不直接更新 text 信号，等用户输入完成后再统一处理
+
+    // 解析文本并提交更新
+    const nextItems = core.parseItems(normalizedText)
+    commitItems(nextItems)
   }
 
   // 处理条目编辑开始事件

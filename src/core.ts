@@ -8,7 +8,7 @@ export const core = {
 
   // 输入文本的规范化处理
   normalizeInputText(value: string) {
-    return value.replace(/[，+|]/g, ',')
+    return value.replace(/[，+|]+/g, ',').replace(/[,\s]+/g, ', ')
   },
 
   // 将输入文本解析为条目列表

@@ -18,12 +18,19 @@
         box-sizing: border-box
         padding: 6px
         outline: none
+        border: 1px solid $mz-border-color
+
+        &:focus
+            border-color: $mz-border-darker
 
     input[type="text"]
         padding: 6px
         outline: none
-        border: 1px solid $mz-border-darker
+        border: 1px solid $mz-border-color
         border-radius: 4px
+
+        &:focus
+            border-color: $mz-border-darker
 
     .tags-list
         list-style: none

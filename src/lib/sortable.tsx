@@ -11,11 +11,48 @@ interface SortableListProps<T> {
   itemClass?: string
   animation?: number
   handle?: string
+  getItemKey?: (item: T, index: number) => string
+  resolveItem?: (key: string) => T | undefined
   options?: Omit<Options, 'onEnd' | 'animation' | 'draggable' | 'dataIdAttr' | 'handle'>
 }
 
 export default function SortableList<T>(props: SortableListProps<T>) {
   let el!: HTMLDivElement
+
+  function restoreDom(children: HTMLDivElement[]) {
+    const currentOrder = new Map(
+      props.items.map((item, index) => [
+        props.getItemKey?.(item, index) ?? String(index),
+        index,
+      ]),
+    )
+
+    const restored = children
+      .filter(child => currentOrder.has(child.dataset.key ?? ''))
+      .sort((left, right) => {
+        const leftIndex = currentOrder.get(left.dataset.key ?? '') ?? 0
+        const rightIndex = currentOrder.get(right.dataset.key ?? '') ?? 0
+        return leftIndex - rightIndex
+      })
+
+    el.replaceChildren(...restored)
+  }
+
+  function getNextItems() {
+    const currentItems = new Map(
+      props.items.map((item, index) => [
+        props.getItemKey?.(item, index) ?? String(index),
+        item,
+      ]),
+    )
+
+    return ([...el.children] as HTMLDivElement[])
+      .map((child) => {
+        const key = child.dataset.key ?? ''
+        return currentItems.get(key) ?? props.resolveItem?.(key)
+      })
+      .filter((item): item is T => item !== undefined)
+  }
 
   onMount(() => {
     const sortable = Sortable.create(el, {
@@ -24,25 +61,17 @@ export default function SortableList<T>(props: SortableListProps<T>) {
       handle: props.handle,
       ...props.options,
       onEnd(evt: SortableEvent) {
-        // 根据拖拽结果更新数据源（重新排列数组）
+        if (evt.to !== el)
+          return
+
         const oldIndex = evt.oldIndex
         const newIndex = evt.newIndex
-        if (oldIndex === newIndex || oldIndex == null || newIndex == null)
+        if (evt.from === el && (oldIndex == null || newIndex == null || oldIndex === newIndex))
           return
-        // 获取当前 DOM 中的子元素顺序，映射回数据项
-        const children = [
-          ...el.children,
-        ] as HTMLSpanElement[]
-        // 根据 data-index 属性获取新的数据项顺序
-        const newItems = children.map(v =>
-          props.items[Number.parseInt(v.dataset.index!)],
-        ) as T[]
-        // 恢复旧的 DOM 顺序，保证上层数据重新渲染后得到预期的结果
-        children.sort(
-          (a, b) => Number.parseInt(a.dataset.index!) - Number.parseInt(b.dataset.index!),
-        )
-        el?.replaceChildren(...children)
-        // 通知上层组件数据已更新
+
+        const children = [...el.children] as HTMLDivElement[]
+        const newItems = getNextItems()
+        restoreDom(children)
         props.onChange?.(newItems)
       },
     })
@@ -53,7 +82,12 @@ export default function SortableList<T>(props: SortableListProps<T>) {
     <div ref={el} class={props.class}>
       <For each={props.items}>
         {(item, index) => (
-          <div class={props.itemClass ?? 'drag-item'} data-sortable-item data-index={index()}>
+          <div
+            class={props.itemClass ?? 'drag-item'}
+            data-sortable-item
+            data-index={index()}
+            data-key={props.getItemKey?.(item, index()) ?? String(index())}
+          >
             {props.renderItem(item, index())}
           </div>
         )}

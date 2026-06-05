@@ -70,6 +70,7 @@ const App: Component = () => {
             itemClass="tag-item"
             items={items()}
             onChange={commitItems}
+            getItemKey={item => item}
             renderItem={(item, index) => (
               <>
                 {editingIndex() === index

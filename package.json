@@ -13,22 +13,22 @@
     "lint:fix": "eslint --fix"
   },
   "dependencies": {
-    "solid-js": "^1.9.9",
+    "solid-js": "^1.9.13",
     "sortablejs": "^1.15.7"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.0.0",
     "@types/sortablejs": "^1.15.9",
-    "@unocss/eslint-plugin": "^66.6.8",
-    "@unocss/preset-mini": "^66.5.0",
-    "@unocss/vite": "^66.5.0",
+    "@unocss/eslint-plugin": "^66.7.0",
+    "@unocss/preset-mini": "^66.7.0",
+    "@unocss/vite": "^66.7.0",
     "baseline-browser-mapping": "^2.10.33",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.1",
     "eslint-plugin-solid": "^0.14.5",
     "sass": "^1.100.0",
-    "solid-devtools": "^0.34.3",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.4",
-    "vite-plugin-solid": "^2.11.8"
+    "solid-devtools": "^0.34.5",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.5",
+    "vite-plugin-solid": "^2.11.12"
   }
 }

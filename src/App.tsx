@@ -61,60 +61,67 @@ const App: Component = () => {
         onInput={handleTextareaInput}
       />
 
-      <div class="tags-list-wrap">
-        <SortableList
-          class="tags-list"
-          itemClass="tag-item"
-          items={items()}
-          onChange={commitItems}
-          renderItem={(item, index) => (
-            <>
-              {editingIndex() === index
-                ? (
-                    <input
-                      type="text"
-                      class="edit-input"
-                      value={draftValue()}
-                      onInput={event => setDraftValue(event.currentTarget.value)}
-                      onBlur={() => handleSaveEdit(index)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                          event.currentTarget.blur()
-                        }
-                        else if (event.key === 'Escape') {
-                          setEditingIndex(null)
-                          setDraftValue('')
-                        }
-                      }}
-                      ref={(element) => {
-                        queueMicrotask(() => {
-                          element.focus()
-                        })
-                      }}
-                    />
-                  )
-                : (
-                    <>
-                      <span class="text" onDblClick={() => handleStartEdit(index)}>
-                        {item}
-                      </span>
-                      <div class="actions">
-                        <button
-                          type="button"
-                          class="delete-btn"
-                          onClick={() => {
-                            const nextItems = core.removeItem(items(), index)
-                            commitItems(nextItems)
-                          }}
-                        >
-                          删除
-                        </button>
-                      </div>
-                    </>
-                  )}
-            </>
-          )}
-        />
+      <div class="grid grid-cols-[0.6fr_1.4fr] gap-5">
+        {/* left-标签列表 */}
+        <div class="tags-list-wrap">
+          <SortableList
+            class="tags-list"
+            itemClass="tag-item"
+            items={items()}
+            onChange={commitItems}
+            renderItem={(item, index) => (
+              <>
+                {editingIndex() === index
+                  ? (
+                      <input
+                        type="text"
+                        class="edit-input"
+                        value={draftValue()}
+                        onInput={event => setDraftValue(event.currentTarget.value)}
+                        onBlur={() => handleSaveEdit(index)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter') {
+                            event.currentTarget.blur()
+                          }
+                          else if (event.key === 'Escape') {
+                            setEditingIndex(null)
+                            setDraftValue('')
+                          }
+                        }}
+                        ref={(element) => {
+                          queueMicrotask(() => {
+                            element.focus()
+                          })
+                        }}
+                      />
+                    )
+                  : (
+                      <>
+                        <span class="text" onDblClick={() => handleStartEdit(index)}>
+                          {item}
+                        </span>
+                        <div class="actions">
+                          <button
+                            type="button"
+                            class="delete-btn"
+                            onClick={() => {
+                              const nextItems = core.removeItem(items(), index)
+                              commitItems(nextItems)
+                            }}
+                          >
+                            删除
+                          </button>
+                        </div>
+                      </>
+                    )}
+              </>
+            )}
+          />
+        </div>
+        {/* right-分组列表 */}
+        <div class="tags-group-wrap">
+          占位
+        </div>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import type { Component, JSX } from 'solid-js'
-import { createSignal } from 'solid-js'
+import { createMemo, createSignal, For } from 'solid-js'
 
 import { core } from './lib/core'
 import { group } from './lib/group'
@@ -18,6 +18,7 @@ const App: Component = () => {
   // 编辑索引及草稿值
   const [editingIndex, setEditingIndex] = createSignal<number | null>(null)
   const [draftValue, setDraftValue] = createSignal('')
+  const itemGroupNamesMap = createMemo(() => group.getItemGroupNamesMap(groups()))
 
   // 文本变更时提交条目列表更新
   function commitItems(nextItems: string[]) {
@@ -118,6 +119,11 @@ const App: Component = () => {
                         <span class="text" onDblClick={() => handleStartEdit(index)}>
                           {item}
                         </span>
+                        <For each={itemGroupNamesMap().get(item) ?? []}>
+                          {groupName => (
+                            <span class="group-badge">{groupName}</span>
+                          )}
+                        </For>
                         <div class="actions">
                           <button
                             type="button"

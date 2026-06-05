@@ -155,6 +155,21 @@ export const group = {
     })
   },
 
+  // 按标签文本建立所属分组名索引，供主列表等展示层快速查询。
+  getItemGroupNamesMap(groups: Group[]) {
+    const itemGroupNamesMap = new Map<string, string[]>()
+
+    groups.forEach((entry) => {
+      entry.items.forEach((item) => {
+        const nextGroupNames = itemGroupNamesMap.get(item) ?? []
+        nextGroupNames.push(entry.name)
+        itemGroupNamesMap.set(item, nextGroupNames)
+      })
+    })
+
+    return itemGroupNamesMap
+  },
+
   // 从标签列表中筛出包含关键词的项，用于批量添加场景。
   matchItemsByKeyword(items: string[], keyword: string) {
     const normalizedKeyword = keyword.trim().toLocaleLowerCase()

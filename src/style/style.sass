@@ -1,7 +1,7 @@
-#tags-sortable-container, #tags-sortable-container *
+#app-container, #app-container *
     box-sizing: border-box
 
-#tags-sortable-container
+#app-container
     $mz-font-size: 14px
     font-size: $mz-font-size
     $mz-li-base: $mz-font-size
@@ -56,18 +56,6 @@
         display: flex
         align-items: center
         justify-content: flex-end
-
-    .tag-item .delete-btn
-        border: 1px solid $mz-border-darker
-        background: #fff
-        color: #666
-        padding: 2px 8px
-        border-radius: 4px
-        cursor: pointer
-
-    .tag-item .delete-btn:hover
-        color: #c00
-        border-color: #c88
 
     .tag-item.sortable-ghost
         opacity: 0.5

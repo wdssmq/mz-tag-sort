@@ -53,7 +53,7 @@ const App: Component = () => {
   // 组件渲染
   return (
     <div
-      id="tags-sortable-container"
+      id="app-container"
     >
       <textarea
         name="tags"
@@ -105,7 +105,7 @@ const App: Component = () => {
                         <div class="actions">
                           <button
                             type="button"
-                            class="delete-btn"
+                            class="btn"
                             onClick={() => {
                               const nextItems = core.removeItem(items(), index)
                               commitItems(nextItems)

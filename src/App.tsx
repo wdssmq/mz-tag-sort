@@ -73,9 +73,9 @@ const App: Component = () => {
 
       <div class="grid grid-cols-[0.6fr_1.4fr] mt-5 gap-5">
         {/* left-标签列表 */}
-        <div class="tags-list-wrap">
+        <div class="main-list-wrap">
           <SortableList
-            class="tags-list"
+            class="tags-list main-list"
             itemClass="tag-item"
             items={items()}
             onChange={commitItems}
@@ -137,7 +137,7 @@ const App: Component = () => {
           />
         </div>
         {/* right-分组列表 */}
-        <div class="tags-group-wrap">
+        <div class="group-list-wrap">
           <GroupsPanel items={items()} groups={groups()} onChange={commitGroups} />
         </div>
       </div>

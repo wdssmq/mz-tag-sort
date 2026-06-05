@@ -142,7 +142,7 @@ const GroupCard: Component<GroupCardProps> = (props) => {
       </div>
 
       <SortableList
-        class="tags-list m-0"
+        class="tags-list group-list"
         itemClass="tag-item"
         items={props.entry.items}
         onChange={props.onChangeItems}

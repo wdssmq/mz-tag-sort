@@ -1,7 +1,7 @@
 import type { Component, JSX } from 'solid-js'
 import { createSignal } from 'solid-js'
 
-import { core } from './core'
+import { core } from './lib/core'
 import SortableList from './lib/sortable'
 import './style/style.sass'
 

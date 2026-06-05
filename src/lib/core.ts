@@ -11,20 +11,22 @@ export const core = {
     return value.replace(/[，+|]+/g, ',').replace(/[,\s]+/g, ', ')
   },
 
+  // 去重并清理条目列表
+  uniqueItems(items: Item[]) {
+    return [...new Set(items.map(item => item.trim()).filter(item => item.length > 0))]
+  },
+
   // 将输入文本解析为条目列表
   parseItems(value: string) {
-    return core
+    const items = core
       .normalizeInputText(value)
       .split(',')
-      .map(item => item.trim())
-      .filter(item => item.length > 0)
+    return core.uniqueItems(items)
   },
 
   // 将条目列表序列化为文本
   serializeItems(items: Item[]) {
-    return items
-      .map(item => item.trim())
-      .filter(item => item.length > 0)
+    return core.uniqueItems(items)
       .join(', ')
   },
 

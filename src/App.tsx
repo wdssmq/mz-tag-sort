@@ -17,8 +17,9 @@ const App: Component = () => {
 
   // 文本变更时提交条目列表更新
   function commitItems(nextItems: string[]) {
-    const nextText = core.serializeItems(nextItems)
-    setItems([...new Set(nextItems)]) // 去重
+    const uniqueItems = core.uniqueItems(nextItems)
+    const nextText = core.serializeItems(uniqueItems)
+    setItems(uniqueItems)
     setText(nextText)
     core.saveText(nextText)
   }

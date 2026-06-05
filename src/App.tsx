@@ -2,15 +2,19 @@ import type { Component, JSX } from 'solid-js'
 import { createSignal } from 'solid-js'
 
 import { core } from './lib/core'
+import { group } from './lib/group'
 import SortableList from './lib/sortable'
+import GroupsPanel from './tsx/GroupsPanel'
 import './style/style.sass'
 
 // TSX 组件
 const App: Component = () => {
   // 初始化 tag 条目
   const initialItems = core.loadItems()
+  const initialGroups = group.loadGroups()
   const [text, setText] = createSignal(core.serializeItems(initialItems))
   const [items, setItems] = createSignal(initialItems)
+  const [groups, setGroups] = createSignal(initialGroups)
   // 编辑索引及草稿值
   const [editingIndex, setEditingIndex] = createSignal<number | null>(null)
   const [draftValue, setDraftValue] = createSignal('')
@@ -22,6 +26,11 @@ const App: Component = () => {
     setItems(uniqueItems)
     setText(nextText)
     core.saveText(nextText)
+  }
+
+  function commitGroups(nextGroups: ReturnType<typeof groups>) {
+    setGroups(nextGroups)
+    group.saveGroups(nextGroups)
   }
 
   // 处理文本输入事件
@@ -62,7 +71,7 @@ const App: Component = () => {
         onInput={handleTextareaInput}
       />
 
-      <div class="grid grid-cols-[0.6fr_1.4fr] gap-5">
+      <div class="grid grid-cols-[0.6fr_1.4fr] mt-5 gap-5">
         {/* left-标签列表 */}
         <div class="tags-list-wrap">
           <SortableList
@@ -71,6 +80,13 @@ const App: Component = () => {
             items={items()}
             onChange={commitItems}
             getItemKey={item => item}
+            options={{
+              group: {
+                name: 'tag-groups',
+                pull: 'clone',
+                put: false,
+              },
+            }}
             renderItem={(item, index) => (
               <>
                 {editingIndex() === index
@@ -122,7 +138,7 @@ const App: Component = () => {
         </div>
         {/* right-分组列表 */}
         <div class="tags-group-wrap">
-          占位
+          <GroupsPanel items={items()} groups={groups()} onChange={commitGroups} />
         </div>
       </div>
     </div>

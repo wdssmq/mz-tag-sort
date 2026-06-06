@@ -100,37 +100,45 @@ const GroupCard: Component<GroupCardProps> = (props) => {
     <section class="group-card min-h-37 flex flex-col gap-3">
       <div class="flex items-center justify-between gap-2 px-[5px] pt-[5px]">
         {/* 一 */}
-        <div>
-          <div class="text-base font-600 leading-none">{props.entry.name}</div>
-          <div class="mt-1 text-xs text-gray-500">
-            {props.entry.items.length}
-            {' '}
-            项
+        <Show when={editMode() !== 'groupName'}>
+          <div class="text-base font-600 leading-none">
+            {props.entry.name}
+            <span class="ml-1 text-xs text-gray-400 font-400">
+              （
+              {props.entry.items.length}
+              {' '}
+              项
+              ）
+            </span>
           </div>
-        </div>
+        </Show>
         {/* 二 */}
         {editMode()
           ? Edit(editMode())
           : null}
         {/* 三 */}
         <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="btn-sm btn"
-            onClick={() => {
-              setGroupName(props.entry.name)
-              setEditMode(value => value === 'groupName' ? null : 'groupName')
-            }}
-          >
-            修改分组名
-          </button>
-          <button
-            type="button"
-            class="btn-sm btn"
-            onClick={() => setEditMode(value => value === 'keyword' ? null : 'keyword')}
-          >
-            批量添加
-          </button>
+          <Show when={editMode() !== 'groupName'}>
+            <button
+              type="button"
+              class="btn-sm btn"
+              onClick={() => {
+                setGroupName(props.entry.name)
+                setEditMode(value => value === 'groupName' ? null : 'groupName')
+              }}
+            >
+              修改分组名
+            </button>
+          </Show>
+          <Show when={editMode() !== 'keyword'}>
+            <button
+              type="button"
+              class="btn-sm btn"
+              onClick={() => setEditMode(value => value === 'keyword' ? null : 'keyword')}
+            >
+              批量添加
+            </button>
+          </Show>
           <button
             type="button"
             class="btn-sm btn"

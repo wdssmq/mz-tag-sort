@@ -72,7 +72,7 @@ const App: Component = () => {
         onInput={handleTextareaInput}
       />
 
-      <div class="grid grid-cols-[0.6fr_1.4fr] mt-5 gap-5">
+      <div class="grid grid-cols-[0.6fr_1.4fr] mt-5 items-start gap-5">
         {/* left-标签列表 */}
         <div class="main-list-wrap">
           <SortableList
@@ -143,7 +143,7 @@ const App: Component = () => {
           />
         </div>
         {/* right-分组列表 */}
-        <div class="group-list-wrap">
+        <div class="group-list-wrap sticky top-5">
           <GroupsPanel items={items()} groups={groups()} onChange={commitGroups} />
         </div>
       </div>

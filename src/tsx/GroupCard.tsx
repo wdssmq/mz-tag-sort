@@ -19,6 +19,7 @@ const GroupCard: Component<GroupCardProps> = (props) => {
   const [keyword, setKeyword] = createSignal('')
   const [groupName, setGroupName] = createSignal('')
   const [editMode, setEditMode] = createSignal<'groupName' | 'keyword' | null>(null)
+  const [editingCache, setEditingCache] = createSignal('')
 
   // 执行批量添加
   function handleBatchAdd() {
@@ -41,6 +42,22 @@ const GroupCard: Component<GroupCardProps> = (props) => {
     setEditMode(null)
   }
 
+  // 自动聚焦输入框
+  function focusInput(element: HTMLInputElement) {
+    queueMicrotask(() => {
+      element.focus()
+      element.select()
+    })
+  }
+
+  // 失焦时取消编辑状态
+  function handleBlur(event: FocusEvent) {
+    const eventTarget = event.currentTarget as HTMLInputElement
+    // 只在“未修改”时自动退出
+    if (eventTarget.value === editingCache())
+      setEditMode(null)
+  }
+
   const Edit = (name: 'groupName' | 'keyword' | null) => {
     return (
       <>
@@ -51,6 +68,8 @@ const GroupCard: Component<GroupCardProps> = (props) => {
               name="groupName"
               placeholder="输入分组名称"
               value={groupName()}
+              ref={focusInput}
+              onBlur={handleBlur}
               onInput={event => setGroupName(event.currentTarget.value)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter')
@@ -75,6 +94,8 @@ const GroupCard: Component<GroupCardProps> = (props) => {
               name="keyword"
               placeholder="输入关键词，例如：猫"
               value={keyword()}
+              ref={focusInput}
+              onBlur={handleBlur}
               onInput={event => setKeyword(event.currentTarget.value)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter')
@@ -124,6 +145,7 @@ const GroupCard: Component<GroupCardProps> = (props) => {
               class="btn-sm btn"
               onClick={() => {
                 setGroupName(props.entry.name)
+                setEditingCache(props.entry.name)
                 setEditMode(value => value === 'groupName' ? null : 'groupName')
               }}
             >
@@ -134,7 +156,10 @@ const GroupCard: Component<GroupCardProps> = (props) => {
             <button
               type="button"
               class="btn-sm btn"
-              onClick={() => setEditMode(value => value === 'keyword' ? null : 'keyword')}
+              onClick={() => {
+                setEditingCache(keyword())
+                setEditMode(value => value === 'keyword' ? null : 'keyword')
+              }}
             >
               批量添加
             </button>
